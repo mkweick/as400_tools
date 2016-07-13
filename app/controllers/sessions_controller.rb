@@ -15,14 +15,14 @@ class SessionsController < ApplicationController
       session[:first_name] = ldap_user.ldap_object[:givenname].first
     	redirect_to root_path
   	else
-      flash.now.notice = 'Authentication failed'
+      flash.now.alert = 'Authentication failed'
     	render 'new'
   	end
 	end
 
 	def destroy
     session.delete(:username)
-    flash.now.alert = 'Successfully logged out'
+    flash.notice = 'Successfully logged out'
 		redirect_to login_path
 	end
 end

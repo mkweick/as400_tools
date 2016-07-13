@@ -6,7 +6,7 @@
 <%= form_tag unlock_po_path, method: 'get', id: 'po-form' do %>
   <div class="form-group">
     <%= text_field_tag 'po_number', nil, class: 'form-control',
-      placeholder: 'PO Number', maxlength: '30' %>
+      placeholder: 'PO Number', maxlength: '30', autofocus: 'autofocus' %>
   </div>
   <%= submit_tag 'Unlock PO', class: 'btn btn-primary' %>
 <% end %>
