@@ -36,6 +36,9 @@ GEM
       minitest (~> 5.1)
       thread_safe (~> 0.3, >= 0.3.4)
       tzinfo (~> 1.1)
+    adauth (2.0.5)
+      expects (~> 0.0.2)
+      net-ldap
     arel (6.0.3)
     autoprefixer-rails (6.3.7)
       execjs
@@ -58,6 +61,7 @@ GEM
     debug_inspector (0.0.2)
     erubis (2.7.0)
     execjs (2.7.0)
+    expects (0.0.3)
     globalid (0.3.6)
       activesupport (>= 4.1.0)
     i18n (0.7.0)
@@ -83,6 +87,7 @@ GEM
     mini_portile2 (2.1.0)
     minitest (5.9.0)
     multi_json (1.12.1)
+    net-ldap (0.14.0)
     nokogiri (1.6.8)
       mini_portile2 (~> 2.1.0)
       pkg-config (~> 1.1.7)
@@ -162,6 +167,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  adauth (= 2.0.5)
   bootstrap-sass (= 3.3.6)
   byebug
   coffee-rails (~> 4.1.0)

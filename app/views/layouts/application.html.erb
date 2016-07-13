@@ -1,14 +1,28 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>UnlockPo</title>
+  <title><%= format_page_title %></title>
   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+  <%= favicon_link_tag 'favicon.ico' %>
   <%= csrf_meta_tags %>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 </head>
 <body>
+  <div class="container">
+    <%= link_to root_path do %>  
+      <%= image_tag('dival-logo.png', alt: 'DiVal Safety Logo') %>
+    <% end %>
 
-<%= yield %>
+    <% if logged_in? %>
+      <%= link_to "Logout #{session[:first_name]}", logout_path, method: 'delete', id: 'logout-btn', class: 'btn btn-sm btn-default' %>
+    <% end %>
 
+    <%= render 'layouts/messages' %>
+
+    <div id="main">
+      <%= yield %>
+    </div>
+  </div>
 </body>
 </html>

@@ -1,0 +1,57 @@
+/*
+ *= require_tree .
+ *= require_self
+*/
+
+@import "bootstrap-sprockets";
+@import "bootstrap";
+
+a {
+  text-decoration: none !important;
+}
+
+li {
+  list-style: none;
+}
+
+body {
+  margin: 20px 0 0 0;
+  text-align: center;
+}
+
+.container > a > img {
+  width: 240px;
+}
+
+form {
+  margin: 20px 0;
+}
+
+.form-group .form-control {
+  margin: 0 auto;
+  width: 250px;
+}
+
+#messages {
+  margin: 15px 0;
+}
+
+#main {
+  clear: both;
+}
+
+#logout-btn {
+  margin: 0 0 0 10px;
+}
+
+#tools {
+  margin: 30px 0 0 0;
+}
+
+#po-results li {
+  font-weight: bold;
+}
+
+#good-po {
+  color: #006600;
+}
