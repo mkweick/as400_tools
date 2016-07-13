@@ -1,4 +1,6 @@
 class StaticPagesController < ApplicationController
-  before_action :require_user
-  def home; end
+  
+  def home
+    redirect_to login_path unless logged_in?
+  end
 end
