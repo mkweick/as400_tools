@@ -1,0 +1,23 @@
+<% @page_title = 'Unlock Vendor' %>
+
+<h2>Unlock Vendor</h2>
+<h6>Use UPDDTA APVEN & UPDDTA VENDR if this tool is not working</h6>
+
+<%= form_tag unlock_vendor_path, method: 'get', id: 'whs-item-form' do %>
+  <div class="form-group">
+    <%= text_field_tag 'vendor_num', nil, class: 'form-control',
+      placeholder: 'Vendor Number', maxlength: '30', autofocus: 'autofocus' %>
+  </div>
+
+  <%= submit_tag 'Unlock Vendor', class: 'btn btn-primary' %>
+<% end %>
+
+<% if @results_msg.any? %>
+  <div id="item-whs-results" class="col-xs-12 col-sm-10 col-sm-offset-1 col-md-6 col-md-offset-3 well">
+    <% @results_msg.each do |msg| %>
+      <ul>
+        <li><%= msg.html_safe %></li>
+      </ul>
+    <% end %>
+  </div>
+<% end %>

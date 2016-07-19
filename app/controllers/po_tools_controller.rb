@@ -23,7 +23,7 @@ class PoToolsController < ApplicationController
       @as400_83f.disconnect
 
       if @results_msg.empty?
-        @results_msg << "<span id=\"good-po\">PO Number #{@po_number} was not stuck anywhere.</span>"
+        @results_msg << "<span id=\"good\">PO Number #{@po_number} was not stuck anywhere.</span>"
       end
     end
   end
