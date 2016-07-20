@@ -6,18 +6,15 @@ class PoToolsController < ApplicationController
   def unlock_po
     @results_msg = []
     @po_number = params[:po_number]
-    
+
     unless @po_number.blank?
       @po_number.strip!
       @as400_83f = ODBC.connect('as400_tools_f')
 
-      unlock_in_use_purchase_order_pohed
-      purchace_order_request_field
-      purchase_order_receipts_pending
-      purchase_order_receiver_in_use
-      purchase_order_stuck_in_receiver
-      purchase_order_stuck_in_reciver_second_check    
-      unlock_in_use_purchase_order_phhed
+      clear_in_use_phhed if po_in_use_in_phhed?
+      clear_in_use_pohed if po_in_use_in_pohed?
+      clear_in_use_rqhed if po_in_use_in_rqhed?
+      clear_records_in_pordt if po_stuck_in_receiver_in_pordt?
 
       @as400_83f.commit
       @as400_83f.disconnect
@@ -30,112 +27,65 @@ class PoToolsController < ApplicationController
 
   private
 
-  def unlock_in_use_purchase_order_pohed
-    sql_check_po = "SELECT phinuc, phinus FROM pohed 
-                    WHERE phorid = '#{@po_number}' 
-                      AND (phinuc != '' OR phinus != '')"
-
-    stmt_check_po = @as400_83f.run(sql_check_po)
-    purchase_order = stmt_check_po.fetch_all   
-
-    unless purchase_order.nil?
-      sql_update_po = "UPDATE pohed SET phinuc = '', phinus = ''
-                       WHERE phorid = '#{@po_number}'"
-      @as400_83f.run(sql_update_po)
-
-      @results_msg << "PO Number #{@po_number} was in use in POHED."
-    end
+  def po_in_use_in_phhed?
+    sql = "SELECT painuc, painus FROM phhed 
+           WHERE paorid = '#{@po_number}'
+             AND (painuc != '' OR painus != '')"
+    @as400_83f.run(sql).fetch_all
   end
 
-  def purchace_order_request_field
-    sql_check_po = "SELECT qhinuc, qhinus FROM rqhed 
-                    WHERE qhorid = '#{@po_number}' 
-                      AND (qhinuc != '' OR qhinus != '')"
+  def clear_in_use_phhed
+    sql = "UPDATE phhed
+           SET painuc = '', painus = ''
+           WHERE paorid = '#{@po_number}'"
+    @as400_83f.run(sql)
 
-    stmt_check_po = @as400_83f.run(sql_check_po)
-    purchase_order = stmt_check_po.fetch_all   
-
-    unless purchase_order.nil?
-      sql_update_po = "UPDATE rqhed SET qhinuc = '', qhinus = ''
-                       WHERE qhorid = '#{@po_number}'"
-      @as400_83f.run(sql_update_po)
-
-      @results_msg << "PO Number #{@po_number} request file was in use in RQHED."
-    end
+    @results_msg << "PO Number #{@po_number} was in use in PHHED."
   end
 
-  def purchase_order_receipts_pending
-    sql_check_po = "SELECT phrcpn FROM pohed 
-                    WHERE phorid = '#{@po_number}' AND phrcpn != ''"
-
-    stmt_check_po = @as400_83f.run(sql_check_po)
-    purchase_order = stmt_check_po.fetch_all   
-
-    unless purchase_order.nil?
-      sql_update_po = "UPDATE pohed SET phrcpn = '' WHERE phorid = '#{@po_number}'"
-      @as400_83f.run(sql_update_po)
-
-      @results_msg << "PO Number #{@po_number} had receipts pending."
-    end
+  def po_in_use_in_pohed?
+    sql = "SELECT phinuc, phinus, phrcpn FROM pohed 
+           WHERE phorid = '#{@po_number}'
+             AND (phinuc != '' OR phinus != '' OR phrcpn != '')"
+    @as400_83f.run(sql).fetch_all
   end
 
-  def purchase_order_receiver_in_use
-    sql_check_po = "SELECT thinus FROM porhd 
-                    WHERE thrcvr LIKE '%#{@po_number}' AND thinus != ''"
+  def clear_in_use_pohed
+    sql = "UPDATE pohed
+            SET phinuc = '', phinus = '', phrcpn = ''
+            WHERE phorid = '#{@po_number}'"
+    @as400_83f.run(sql)
 
-    stmt_check_po = @as400_83f.run(sql_check_po)
-    purchase_order = stmt_check_po.fetch_all
-
-    unless purchase_order.nil?
-      sql_update_po = "UPDATE porhd SET thinus = '' WHERE thrcvr LIKE '%#{@po_number}'"
-      @as400_83f.run(sql_update_po)
-
-      @results_msg << "PO Number #{@po_number} receiver was in use."
-    end
+    @results_msg << "PO Number #{@po_number} was in use in POHED or had receipts pending."
   end
 
-  def purchase_order_stuck_in_receiver
-    sql_check_po = "SELECT * FROM pordt WHERE tdrcvr LIKE '%#{@po_number}'"
-
-    stmt_check_po = @as400_83f.run(sql_check_po)
-    purchase_order = stmt_check_po.fetch_all
-
-    unless purchase_order.nil?
-      sql_update_po = "DELETE FROM pordt WHERE tdrcvr LIKE '%#{@po_number}'"
-      @as400_83f.run(sql_update_po)
-
-      @results_msg << "PO Number #{@po_number} was stuck in receiver."
-    end
+  def po_in_use_in_rqhed?
+    sql = "SELECT qhinuc, qhinus FROM rqhed 
+           WHERE qhorid = '#{@po_number}'
+             AND (qhinuc != '' OR qhinus != '')"
+    @as400_83f.run(sql).fetch_all
   end
 
-  def purchase_order_stuck_in_reciver_second_check
-    sql_check_po = "SELECT * FROM pordt WHERE tdpono = '#{@po_number}'"
+  def clear_in_use_rqhed
+    sql = "UPDATE rqhed
+           SET qhinuc = '', qhinus = ''
+           WHERE qhorid = '#{@po_number}'"
+    @as400_83f.run(sql)
 
-    stmt_check_po = @as400_83f.run(sql_check_po)
-    purchase_order = stmt_check_po.fetch_all
-
-    unless purchase_order.nil?
-      sql_update_po = "DELETE FROM pordt WHERE tdpono = '#{@po_number}'"
-      @as400_83f.run(sql_update_po)
-      
-      @results_msg << "PO Number #{@po_number} was stuck in receiver."
-    end
+    @results_msg << "PO Number #{@po_number} request file was in use in RQHED."
   end
 
-  def unlock_in_use_purchase_order_phhed
-    sql_check_po = "SELECT painuc, painus FROM phhed 
-                    WHERE paorid = '#{@po_number}' 
-                      AND (painuc != '' OR painus != '')"
+  def po_stuck_in_receiver_in_pordt?
+    sql = "SELECT * FROM pordt
+           WHERE tdpono = '#{@po_number}'"
+    @as400_83f.run(sql).fetch_all
+  end
 
-    stmt_check_po = @as400_83f.run(sql_check_po)
-    purchase_order = stmt_check_po.fetch_all   
-
-    unless purchase_order.nil?
-      sql_update_po = "UPDATE phhed SET painuc = '', painus = ''
-                       WHERE paorid = '#{@po_number}'"
-      @as400_83f.run(sql_update_po)
-
-      @results_msg << "PO Number #{@po_number} was in use in PHHED."
-    end
+  def clear_records_in_pordt
+    sql = "DELETE FROM pordt
+           WHERE tdpono = '#{@po_number}'"
+    @as400_83f.run(sql)
+    
+    @results_msg << "PO Number #{@po_number} was stuck in receiver."
   end
 end
