@@ -58,7 +58,7 @@ form {
   width: 200px;
 }
 
-#po-results li, #item-whs-results li {
+#results li {
   font-weight: bold;
 }
 
@@ -66,11 +66,11 @@ form {
   color: #006600;
 }
 
-#whs-item-form label {
+#unlock-form label {
   margin: 0 10px 0 0;
 }
 
-#whs_id {
+select#whs_id {
   display: inline-block;
   width: 100px;
 }

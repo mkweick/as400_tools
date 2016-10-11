@@ -1,0 +1,14 @@
+<% @page_title = 'Unlock Voucher Group ID' %>
+
+<h2>Unlock Voucher Group ID</h2>
+<h6>Use UPDDTA APVGP if this tool is not working</h6>
+
+<%= form_tag unlock_voucher_group_id_path, remote: true, id: 'unlock-form' do %>
+  <div class="form-group">
+    <%= text_field_tag 'voucher_group_id', nil, class: 'form-control',
+      placeholder: 'Voucher Group ID', required: true,
+      maxlength: '5', autofocus: 'autofocus' %>
+  </div>
+
+  <%= submit_tag 'Unlock Voucher Group ID', class: 'btn btn-primary' %>
+<% end %>

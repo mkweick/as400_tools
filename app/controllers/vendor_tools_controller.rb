@@ -3,12 +3,15 @@ require 'odbc'
 class VendorToolsController < ApplicationController
   before_action :require_user
 
+  def vendor; end
+  
   def unlock_vendor
-    @results_msg = []
-    @vendor_num = params[:vendor_num]
+    @vendor_num = params[:vendor_num] if params[:vendor_num].present?
     
-    unless @vendor_num.blank?
+    if @vendor_num
       @vendor_num = @vendor_num.strip.upcase
+      @results_msg = []
+      
       as400_83f = ODBC.connect('as400_tools_f')
 
       sql = "SELECT a.avinus, b.pvinus FROM apven AS a
@@ -19,14 +22,16 @@ class VendorToolsController < ApplicationController
       if vendor
         in_use = vendor.flatten.map(&:strip)
 
-        unless in_use[0].blank? #file apven
+        #file apven
+        unless in_use[0].blank?
           sql = "UPDATE apven SET avinus = '' WHERE avvnno = '#{@vendor_num}'"
           as400_83f.run(sql)
 
           @results_msg << "Vendor number #{@vendor_num} cleared from use in APVEN."
         end
-        
-        unless in_use[1].blank? #file vendr
+
+        #file vendr
+        unless in_use[1].blank?
           sql = "UPDATE vendr SET pvinus = '' WHERE pvvnno = '#{@vendor_num}'"
           as400_83f.run(sql)
 
@@ -41,6 +46,8 @@ class VendorToolsController < ApplicationController
         @results_msg << "<span id=\"good\">Vendor Number #{@vendor_num} was " \
                         "not in use in APVEN or VENDR.</span>"
       end
+      
+      render 'shared/results'
     end
   end
 end

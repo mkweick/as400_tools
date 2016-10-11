@@ -1,0 +1,20 @@
+<% @page_title = 'Unlock WHS Item' %>
+
+<h2>Unlock WHS Item</h2>
+<h6>Use UPDDTA ITBAL if this tool is not working</h6>
+
+<%= form_tag unlock_whs_item_path, remote: true, id: 'unlock-form' do %>
+  <div class="form-group">
+    <%= text_field_tag 'item_num', nil, class: 'form-control',
+      placeholder: 'Item Number', required: true,
+      maxlength: '30', autofocus: 'autofocus' %>
+  </div>
+
+  <div class="form-group">
+    <label for="whs_id">WHS:</label>
+    <%= select_tag :whs_id, options_for_select(as400_warehouses),
+      class: 'form-control', required: true %>
+  </div>
+
+  <%= submit_tag 'Unlock Item', class: 'btn btn-primary' %>
+<% end %>

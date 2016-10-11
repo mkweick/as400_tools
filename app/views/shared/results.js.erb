@@ -1,0 +1,13 @@
+var results = "<div id=\"results\" class=\"col-xs-12 col-sm-10 col-sm-offset-1 col-md-6 col-md-offset-3 well\">";
+
+<% @results_msg.each do |msg| %>
+  results += "<ul><li><%= j msg.html_safe %></li></ul>";
+<% end %>
+
+results += "</div>";
+
+if ($('#results').length > 0) {
+  $('#results').replaceWith(results);
+} else {
+  $('#unlock-form').after(results);
+}

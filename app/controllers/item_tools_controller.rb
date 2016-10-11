@@ -3,12 +3,16 @@ require 'odbc'
 class ItemToolsController < ApplicationController
   before_action :require_user
 
+  def whs_item; end
+  
   def unlock_whs_item
-    @results_msg = []
-    @item_num, @whs_id = params[:item_num], params[:whs_id]
+    @item_num = params[:item_num] if params[:item_num].present?
+    @whs_id = params[:whs_id] if params[:whs_id].present?
     
-    unless @item_num.blank? || @whs_id.blank?
+    if @item_num && @whs_id
       @item_num = @item_num.strip.upcase
+      @results_msg = []
+      
       as400_83f = ODBC.connect('as400_tools_f')
 
       sql = "SELECT ibitno FROM itbal
@@ -33,6 +37,8 @@ class ItemToolsController < ApplicationController
       if @results_msg.empty?
         @results_msg << "<span id=\"good\">Item Number #{@item_num} in WHS #{@whs_id} was not in use.</span>"
       end
+      
+      render 'shared/results'
     end
   end
 end

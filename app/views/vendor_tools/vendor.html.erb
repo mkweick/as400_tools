@@ -1,0 +1,14 @@
+<% @page_title = 'Unlock Vendor' %>
+
+<h2>Unlock Vendor</h2>
+<h6>Use UPDDTA APVEN & UPDDTA VENDR if this tool is not working</h6>
+
+<%= form_tag unlock_vendor_path, remote: true, id: 'unlock-form' do %>
+  <div class="form-group">
+    <%= text_field_tag 'vendor_num', nil, class: 'form-control',
+      placeholder: 'Vendor Number', required: true,
+      maxlength: '30', autofocus: 'autofocus' %>
+  </div>
+
+  <%= submit_tag 'Unlock Vendor', class: 'btn btn-primary' %>
+<% end %>
