@@ -10,5 +10,6 @@
       maxlength: '30', autofocus: 'autofocus' %>
   </div>
   
-  <%= submit_tag 'Unlock PO', class: 'btn btn-primary' %>
+  <%= submit_tag 'Unlock PO', class: 'btn btn-primary',
+    data: { disable_with: "Checking..." } %>
 <% end %>
