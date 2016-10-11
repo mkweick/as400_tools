@@ -5,7 +5,7 @@
 
 <%= form_tag unlock_po_path, remote: true, id: 'unlock-form' do %>
   <div class="form-group">
-    <%= text_field_tag 'po_number', nil, class: 'form-control',
+    <%= text_field_tag 'po_num', nil, class: 'form-control',
       placeholder: 'PO Number', required: true,
       maxlength: '30', autofocus: 'autofocus' %>
   </div>
