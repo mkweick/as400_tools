@@ -10,5 +10,6 @@
       maxlength: '5', autofocus: 'autofocus' %>
   </div>
 
-  <%= submit_tag 'Unlock Voucher Group ID', class: 'btn btn-primary' %>
+  <%= submit_tag 'Unlock Voucher Group ID', class: 'btn btn-primary',
+    data: { disable_with: "Checking..." } %>
 <% end %>

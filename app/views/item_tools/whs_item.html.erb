@@ -16,5 +16,6 @@
       class: 'form-control', required: true %>
   </div>
 
-  <%= submit_tag 'Unlock Item', class: 'btn btn-primary' %>
+  <%= submit_tag 'Unlock Item', class: 'btn btn-primary',
+    data: { disable_with: "Checking..." } %>
 <% end %>
